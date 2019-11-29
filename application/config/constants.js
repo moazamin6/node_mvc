@@ -1,0 +1,1 @@
+const constants = require('../../kernel/constants');
