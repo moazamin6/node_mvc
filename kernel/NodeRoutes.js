@@ -1,3 +1,4 @@
+"use strict";
 const express = require('express');
 const path = require('path');
 const constants = require('./constants');
@@ -32,5 +33,3 @@ module.exports = {
       return module.exports = router;
    }
 };
-
-// module.exports.router = router;

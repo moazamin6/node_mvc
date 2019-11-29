@@ -1,6 +1,10 @@
 const my_controller = {
    check: function (req, res) {
-      res.send('hello this is response');
+      res.render('test');
+   },
+
+   getName: (req, res) => {
+      res.send('my name is moaz');
    }
 };
 
