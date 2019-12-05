@@ -1,4 +1,6 @@
-const router = require('../../kernel/NodeRoutes');
+const routes = {
+   default_controller: 'Controller',
+   default_function: 'index'
+};
 
-router.get('/', 'my_controller@check');
-router.route('get', '/name', 'my_controller@getName');
+module.exports = routes;

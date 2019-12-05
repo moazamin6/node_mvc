@@ -1,5 +1,5 @@
-'use strict'
-const t = import_lib('Application/Controllers/my_controller');
+'use strict';
+const t = use('Application/Controllers/my_controller');
 module.exports = {
    AGE: '25'
 };
