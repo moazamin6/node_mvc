@@ -1,5 +1,5 @@
 const routes = {
-   default_controller: 'Controller',
+   default_controller: 'MyController',
    default_function: 'index'
 };
 
