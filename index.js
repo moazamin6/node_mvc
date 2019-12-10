@@ -1,74 +1,49 @@
 require('./kernel/core');
+const {engine} = use('express-edge');
 const path = use('path');
-const http = use('http');
-
-const constant = use('Kernel/constants');
+const constants = use('Kernel/constants');
+const Client = use('Kernel/Client');
 const route = use('Application/Config/routes');
-// console.log(route);
+const config = use('Application/Config/config');
+const express = use('express');
+const bodyParser = require('body-parser');
+const url_util = use('url');
+const app = express();
+const port = 3000;
+
+const Bootstrap = use('Kernel/Bootstrap');
 
 
-let server = http.createServer((req, res) => {   //create web server
+let controller_name = '';
+let function_name = '';
+let Controller = '';
+// edge_config({cache: process.env.NODE_ENV === 'production'});
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(engine);
+app.set('views', constants.VIEW_PATH);
 
-   let method = req.method;
-   let url = req.url;
-   // console.log(url);
-   // console.log(url.split('/')[0]);
-   // console.log(url.split('/')[1]);
-   // console.log(url.split('/')[2]);
 
-   let controller = '';
-   let controller_function = route.default_function;
+//handling all requests
+app.all('*', (req, res) => {
+
+   let url = url_util.parse(req.url).pathname;
    if (url === '/') {
+      controller_name = route.default_controller;
+      function_name = route.default_function;
 
-      controller = use(path.join('Application/Controllers', route.default_controller));
-      let obj = new controller();
-      obj[controller_function]();
    } else {
 
-      controller = use(path.join('Application/Controllers', url.split('/')[1]));
-      let func = url.split('/')[2];
-      if (func !== undefined) {
-         controller_function = func;
+      controller_name = url.split('/')[1];
+      function_name = url.split('/')[2];
+      if (function_name === undefined) {
+         function_name = 'index';
       }
-
-      let obj = new controller();
-      obj[controller_function]();
    }
-
-
-
-   // if (req.url === '/') { //check the URL of the current request
-   //
-   //    // set response header
-   //    res.writeHead(200, {'Content-Type': 'application/json'});
-   //    // res.setHeader('Content-Type', 'application/json');
-   //    // set response content
-   //    //res.write(res.toJSON());
-   //    // console.log(req)
-   //    res.end(JSON.stringify(req.method));
-   //
-   // }
-   // else if (req.url === "/student") {
-   //
-   //    res.writeHead(200, {'Content-Type': 'text/html'});
-   //    res.write('<html><body><p>This is student Page.</p></body></html>');
-   //    res.end();
-   //
-   // }
-   // else if (req.url === "/admin") {
-   //
-   //    res.writeHead(200, {'Content-Type': 'text/html'});
-   //    res.write('<html><body><p>This is admin Page.</p></body></html>');
-   //    res.end();
-   //
-   // }
-   // else{
-   //    res.end('Invalid Request!');
-   // }
-
-
+   Controller = use(path.join('Application/Controllers', controller_name));
+   Client.request = req;
+   Client.response = res;
+   let ob = new Controller();
+   ob[function_name](req.body);
 });
 
-server.listen(5000); //6 - listen for any incoming requests
-
-console.log('Node.js web server at port 5000 is running..')
+app.listen(port, () => console.log(`Node MVC app listening on http://localhost:${port}`));

@@ -1,11 +1,28 @@
-class MyController {
+const BaseController = use('Kernel/BaseController');
 
-   constructor(){
+class MyController extends BaseController {
 
+   constructor() {
+
+      super();
    }
-   index() {
-      console.log('this is index function from my controller')
+
+   index(body) {
+
+      console.log(body);
+      let data = {
+         name: 'moaz',
+         func: () => 'function'
+      };
+      // this.response.send(data);
+      return this.loadView('test', {data});
+      // this.response.render('test');
+      // this.response.send({msg: 'From index function', url: this.request.url, method: this.request.method})
+   }
+
+   get() {
+      this.response.send({msg: 'From get function', url: this.request.url, method: this.request.method})
    }
 }
 
-module.exports=MyController;
+module.exports = MyController;
