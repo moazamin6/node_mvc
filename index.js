@@ -1,29 +1,42 @@
 require('./kernel/core');
+const path = use('path');
 const http = use('http');
+
+const constant = use('Kernel/constants');
 const route = use('Application/Config/routes');
 // console.log(route);
+
 
 let server = http.createServer((req, res) => {   //create web server
 
    let method = req.method;
    let url = req.url;
-   let controller = use('Application/Controllers/' + route.default_controller);
-   let func = route.default_function;
-   if (method === 'GET') {
-      if (url === '/') {
-         let ob = new controller();
-         ob[func]();
-      } else {
-         controller = url.split('/')[1];
-         let f = url.split('/')[0];
-         console.log(controller, func);
-         if (f === '') {
-            controller = use('Application/Controllers/' + controller);
-            let ob = new controller();
-            ob[func]();
-         }
+   // console.log(url);
+   // console.log(url.split('/')[0]);
+   // console.log(url.split('/')[1]);
+   // console.log(url.split('/')[2]);
+
+   let controller = '';
+   let controller_function = route.default_function;
+   if (url === '/') {
+
+      controller = use(path.join('Application/Controllers', route.default_controller));
+      let obj = new controller();
+      obj[controller_function]();
+   } else {
+
+      controller = use(path.join('Application/Controllers', url.split('/')[1]));
+      let func = url.split('/')[2];
+      if (func !== undefined) {
+         controller_function = func;
       }
+
+      let obj = new controller();
+      obj[controller_function]();
    }
+
+
+
    // if (req.url === '/') { //check the URL of the current request
    //
    //    // set response header
