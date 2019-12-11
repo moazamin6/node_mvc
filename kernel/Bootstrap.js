@@ -1,14 +1,16 @@
 "use strict";
-const {engine,config} = use('express-edge');
+const {engine, config} = use('express-edge');
 const path = use('path');
 const constants = use('Kernel/constants');
 const Client = use('Kernel/Client');
+const BaseHelper = use('Kernel/BaseHelper');
 const route = use('Application/Config/routes');
 const express = use('express');
 const bodyParser = use('body-parser');
 const url_util = use('url');
 const app = express();
 require('express-edge');
+
 class Bootstrap {
    constructor() {
 
@@ -39,6 +41,12 @@ class Bootstrap {
          let ob = new Controller();
          ob[function_name](req.body);
       });
+      Object.keys(BaseHelper).forEach((v, i) => {
+         // console.log(BaseHelper[v]());
+         app.locals[v] = BaseHelper[v];
+         global[v] = BaseHelper[v];
+      });
+
       return this;
    }
 
@@ -54,7 +62,7 @@ class Bootstrap {
 
    initTemplating() {
       app.use(bodyParser.urlencoded({extended: true}));
-      // config({cache: process.env.NODE_ENV === 'production'});
+      config({cache: process.env.NODE_ENV === 'production'});
       app.use(engine);
       app.set('views', constants.VIEW_PATH);
       return this;

@@ -1,3 +1,4 @@
+"use strict";
 const BaseController = use('Kernel/BaseController');
 
 class MyController extends BaseController {
@@ -9,6 +10,7 @@ class MyController extends BaseController {
 
    index(body) {
 
+      return this.loadView('inc.base');
       let data = [];
       data['name'] = 'moaz';
 
