@@ -9,15 +9,10 @@ class MyController extends BaseController {
 
    index(body) {
 
-      console.log(body);
-      let data = {
-         name: 'moaz',
-         func: () => 'function'
-      };
-      // this.response.send(data);
-      return this.loadView('test', {data});
-      // this.response.render('test');
-      // this.response.send({msg: 'From index function', url: this.request.url, method: this.request.method})
+      let data = [];
+      data['name'] = 'moaz';
+
+      this.loadView('test',data)
    }
 
    get() {
